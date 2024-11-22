@@ -1,34 +1,78 @@
-using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Spawner : MonoBehaviour
 {
-    private const int MinimumObjects = 2;
-    private const int MaximumObjects = 6;
+    [SerializeField] private int _minimumObjects = 2;
+    [SerializeField] private int _maximumObjects = 6;
 
-    public event Action<GameObject> GameObjectCreated;
+    private List<Cube> _cubes;
 
-    public List<GameObject> CreateList(GameObject objectToCreate)
+    private void Awake()
     {
-        int countNewObjects = UnityEngine.Random.Range(MinimumObjects, MaximumObjects);
-        List<GameObject> gameObjects = new();
+        _cubes = GetComponentsInChildren<Cube>().ToList();
+    }
+
+    private void OnEnable()
+    {
+        foreach (Cube cube in _cubes)
+        {
+            Subscribe(cube);
+        }
+    }
+
+    private void OnDisable()
+    {
+        foreach (Cube cube in _cubes)
+        {
+            Unsubscribe(cube);
+        }
+    }
+
+    private void Subscribe(Cube cube)
+    {
+        cube.Separation += CreateList;
+        cube.Destroyed += Remove;
+    }
+
+    private void Unsubscribe(Cube cube)
+    {
+        cube.Separation -= CreateList;
+        cube.Destroyed -= Remove;
+    }
+
+    private void CreateList(Cube cubeToCreate)
+    {
+        int maximumObjects = _maximumObjects + 1;
+        int countNewObjects = Random.Range(_minimumObjects, maximumObjects);
+
+        List<Rigidbody> rigidbodies = new List<Rigidbody>();
 
         for (int i = 0; i < countNewObjects; i++)
         {
-            GameObject gameObject = Create(objectToCreate);
-            gameObjects.Add(gameObject);
-            GameObjectCreated?.Invoke(gameObject);
+            Cube cube = Create(cubeToCreate.gameObject);
+            _cubes.Add(cube);
+            Subscribe(cube);
+
+            cubeToCreate.Initialize(cube);
+            rigidbodies.Add(cube.GetComponent<Rigidbody>());
         }
 
-        return gameObjects;
+        cubeToCreate.Explode(rigidbodies);
     }
 
-    private GameObject Create(GameObject objectToCreate)
+    private void Remove(Cube cube)
+    {
+        Unsubscribe(cube);
+        _cubes?.Remove(cube);
+    }
+
+    private Cube Create(GameObject objectToCreate)
     {
         GameObject gameObject = Instantiate(objectToCreate, objectToCreate.transform.position, Quaternion.identity, transform);
         gameObject.name = objectToCreate.name;
 
-        return gameObject;
+        return gameObject.GetComponent<Cube>();
     }
 }

@@ -14,6 +14,8 @@ GameObject:
   - component: {fileID: 6041342146211609245}
   - component: {fileID: 8706084020377100575}
   - component: {fileID: 5221754646479748658}
+  - component: {fileID: 3397869639417003785}
+  - component: {fileID: 1154479249317080172}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Respawn
@@ -146,8 +148,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 33dedb99c8850514298eb1327c676d92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _spawner: {fileID: 0}
-  _explosionRadius: 50
-  _explosionForce: 600
   _decayProbability: 1
   _valueIncreaseChance: 0.5
+--- !u!114 &3397869639417003785
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 74965890799480006}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 784b15dd61855514ca8b9df4a7ef15ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _scaleMultiplier: 0.5
+--- !u!114 &1154479249317080172
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 74965890799480006}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7b6a19620a22b04a8f04812f6bd7a5a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _explosionRadius: 20
+  _explosionForce: 500
