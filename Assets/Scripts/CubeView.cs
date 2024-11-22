@@ -3,14 +3,9 @@ using UnityEngine;
 [RequireComponent(typeof(Renderer))]
 public class CubeView : MonoBehaviour
 {
-    [SerializeField] private float _scaleMultiplier = 0.5f;
-
-    public void Modify()
+    public void Modify(float scale)
     {
-        gameObject.transform.localScale *= _scaleMultiplier;
-
-        Color randomColor = new(Random.value, Random.value, Random.value);
-        Renderer renderer = GetComponent<Renderer>();
-        renderer.material.color = randomColor;
+        gameObject.transform.localScale = new(scale, scale, scale);
+        GetComponent<Renderer>().material.color = new(Random.value, Random.value, Random.value);
     }
 }

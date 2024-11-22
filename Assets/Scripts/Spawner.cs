@@ -32,46 +32,46 @@ public class Spawner : MonoBehaviour
 
     private void Subscribe(Cube cube)
     {
-        cube.Separation += CreateList;
-        cube.Destroyed += Remove;
+        cube.Separation += CreateCubes;
+        cube.Destroyed += RemoveCube;
     }
 
     private void Unsubscribe(Cube cube)
     {
-        cube.Separation -= CreateList;
-        cube.Destroyed -= Remove;
+        cube.Separation -= CreateCubes;
+        cube.Destroyed -= RemoveCube;
     }
 
-    private void CreateList(Cube cubeToCreate)
+    private void CreateCubes(Cube cubeSource, float scale, float decayProbability)
     {
         int maximumObjects = _maximumObjects + 1;
         int countNewObjects = Random.Range(_minimumObjects, maximumObjects);
 
-        List<Rigidbody> rigidbodies = new List<Rigidbody>();
+        List<Rigidbody> rigidbodies = new();
 
         for (int i = 0; i < countNewObjects; i++)
         {
-            Cube cube = Create(cubeToCreate.gameObject);
-            _cubes.Add(cube);
-            Subscribe(cube);
+            Cube newCube = Create(cubeSource.gameObject);
+            _cubes.Add(newCube);
+            Subscribe(newCube);
 
-            cubeToCreate.Initialize(cube);
-            rigidbodies.Add(cube.GetComponent<Rigidbody>());
+            rigidbodies.Add(newCube.GetComponent<Rigidbody>());
+            newCube.Initialize(scale, decayProbability);
         }
 
-        cubeToCreate.Explode(rigidbodies);
+        cubeSource.Explode(rigidbodies);
     }
 
-    private void Remove(Cube cube)
+    private void RemoveCube(Cube cube)
     {
         Unsubscribe(cube);
         _cubes?.Remove(cube);
     }
 
-    private Cube Create(GameObject objectToCreate)
+    private Cube Create(GameObject cubeSource)
     {
-        GameObject gameObject = Instantiate(objectToCreate, objectToCreate.transform.position, Quaternion.identity, transform);
-        gameObject.name = objectToCreate.name;
+        GameObject gameObject = Instantiate(cubeSource, cubeSource.transform.position, Quaternion.identity, transform);
+        gameObject.name = cubeSource.name;
 
         return gameObject.GetComponent<Cube>();
     }

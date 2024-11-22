@@ -7,46 +7,31 @@ using UnityEngine;
 public class Cube : MonoBehaviour
 {
     [SerializeField] private float _decayProbability = 1f;
-    [SerializeField] private float _valueIncreaseChance = 0.5f;
+    [SerializeField] private float _robabilityMultiplier = 0.5f;
+    [SerializeField] private float _scaleMultiplier = 0.5f;
 
-    public event Action<Cube> Separation;
+    public event Action<Cube, float, float> Separation;
     public event Action<Cube> Destroyed;
-
-    private Cube _cube;
-
-    private void Awake()
-    {
-        _cube = GetComponent<Cube>();
-    }
 
     private void OnMouseUpAsButton()
     {
-        if (_decayProbability > UnityEngine.Random.value)
-            Separation?.Invoke(_cube);
+        Cube cube = GetComponent<Cube>();
 
-        Destroyed?.Invoke(gameObject.GetComponent<Cube>());
+        if (_decayProbability > UnityEngine.Random.value)
+            Separation?.Invoke(cube, transform.localScale.x, _decayProbability);
+
+        Destroyed?.Invoke(cube);
         Destroy(gameObject);
     }
 
-    public void Initialize(Cube cube)
+    public void Initialize(float scale, float decayProbability)
     {
-        ReduceChanceExplosion(cube);
-        cube.GetComponent<CubeView>().Modify();
+        _decayProbability = decayProbability * _robabilityMultiplier;
+        GetComponent<CubeView>().Modify(scale * _scaleMultiplier);
     }
 
     public void Explode(List<Rigidbody> rigidbodies)
     {
-        gameObject.GetComponent<Explosion>().Explode(rigidbodies);
-    }
-
-    public void SetDecayProbability(float chance)
-    {
-        _decayProbability = chance;
-    }
-
-    private void ReduceChanceExplosion(Cube cube)
-    {
-        float chance = _decayProbability * _valueIncreaseChance;
-        cube.SetDecayProbability(chance);
+        GetComponent<Explosion>().Explode(rigidbodies);
     }
 }
