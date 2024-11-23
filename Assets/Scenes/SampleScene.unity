@@ -632,6 +632,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10e6c9c812df91d4aa2fb80d209a4312, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _cubePrefab: {fileID: 74965890799480006, guid: 4f5c701d212c3b34183a7ceb5819b6b4, type: 3}
   _minimumObjects: 2
   _maximumObjects: 6
 --- !u!4 &1003688381

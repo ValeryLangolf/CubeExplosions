@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Spawner : MonoBehaviour
 {
+    [SerializeField] private GameObject _cubePrefab;
     [SerializeField] private int _minimumObjects = 2;
     [SerializeField] private int _maximumObjects = 6;
 
@@ -51,7 +52,7 @@ public class Spawner : MonoBehaviour
 
         for (int i = 0; i < countNewObjects; i++)
         {
-            Cube newCube = Create(cubeSource.gameObject);
+            Cube newCube = Create(cubeSource.transform.position);
             _cubes.Add(newCube);
             Subscribe(newCube);
 
@@ -68,10 +69,9 @@ public class Spawner : MonoBehaviour
         _cubes?.Remove(cube);
     }
 
-    private Cube Create(GameObject cubeSource)
+    private Cube Create(Vector3 position)
     {
-        GameObject gameObject = Instantiate(cubeSource, cubeSource.transform.position, Quaternion.identity, transform);
-        gameObject.name = cubeSource.name;
+        GameObject gameObject = Instantiate(_cubePrefab, position, Quaternion.identity, transform);
 
         return gameObject.GetComponent<Cube>();
     }
